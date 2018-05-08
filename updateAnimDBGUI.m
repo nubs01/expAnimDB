@@ -11,7 +11,21 @@ function updateAnimDBGUI(handles,varargin)
     setappdata(handles.figure1,'animDB',animDB)
 
     % Update animal list
+    if isempty(animDB)
+        clearAnimData(handles)
+        set(handles.animal_list,'String','','Value',1)
+        return;
+    end
+
+    animList = {animDB.animal}';
+    animIdx = get(handles.animal_list,'Value',1);
+    if animIdx>numel(animList) || animIdx<1
+        animIdx = 1;
+    end
+    set(handles.animal_list,'String',animList,'Value',1)
+    set(handles.animal_panel,'Visible','on')
     
+
 
 
 
@@ -23,10 +37,26 @@ function updateAnimDBGUI(handles,varargin)
 
 function clearEpochData(handles)
 % Function to clear all Epoch Data in GUI
+set(handles.comment_edit,'String','')
+set(handles.ecuStart_edit,'String','')
+set(handles.ecuEnd_edit,'String','')
+set(handles.injVol_edit,'String','')
+set(handles.injDose_edit,'String','')
+
+set(handles.diodeNum_pop,'Value',1)
+set(handles.epoch_pop,'Value',1)
+set(handles.env_pop,'Value',1)
+set(handles.injection_pop,'Value',1)
+set(handles.led_pop,'Value',1)
+
 
 function clearDayData(handles)
 % Function to clear all Day Data in GUI
-set(handles.
+set(handles.recDate_text,'String','')
+set(handles.recTime_edit,'String','HH:MM')
+set(handles.recAge_edit,'String','')
+set(handles.recWeight_edit,'String','')
+clearEpochData(handles)
 
 function clearRecData(handles)
 % Function to clear all recording data in GUI
