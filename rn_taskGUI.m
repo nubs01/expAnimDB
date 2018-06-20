@@ -22,7 +22,7 @@ function varargout = rn_taskGUI(varargin)
 
 % Edit the above text to modify the response to help rn_taskGUI
 
-% Last Modified by GUIDE v2.5 25-May-2018 13:43:57
+% Last Modified by GUIDE v2.5 20-Jun-2018 17:17:48
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -1092,4 +1092,3 @@ function tet_push_Callback(hObject, eventdata, handles)
     recDat(dayIdx).tet_info = newInf;
     animDat.recording_data = recDat;
     setappdata(handles.figure1,'currAnimDat',animDat)
-
