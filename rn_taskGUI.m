@@ -105,8 +105,10 @@ function addDay_push_Callback(hObject, eventdata, handles)
     recDat = animDat.recording_data;
     if isempty(recDat)
         day = 1;
+        tet_info = [];
     else
         day = numel(recDat)+1;
+        tet_info = recDat(end).tet_info;
     end
     recDate = {};
     while isempty(recDate)
@@ -124,7 +126,7 @@ function addDay_push_Callback(hObject, eventdata, handles)
     else
         recAge = [];
     end
-    newDay = createNewRecDayStruct('day',day,'rec_date',recDatetime,'age',recAge);
+    newDay = createNewRecDayStruct('day',day,'rec_date',recDatetime,'age',recAge,'tet_info',tet_info);
     recDat = [recDat newDay];
     animDat.recording_data = recDat;
     updateAnimDBGUI(handles,'animDat',animDat)
