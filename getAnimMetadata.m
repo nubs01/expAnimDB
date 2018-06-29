@@ -4,7 +4,7 @@ function out = getAnimMetadata(animID,dbPath)
 
 
     if ~exist('dbPath','var')
-        dbPath = '~/Projects/rn_Schizophrenia_Project/matadata/animal_metadata.mat';
+        dbPath = '~/Projects/rn_Schizophrenia_Project/metadata/animal_metadata.mat';
     end
     animDB = load(dbPath,'animDB');
     animDB = animDB.animDB;
