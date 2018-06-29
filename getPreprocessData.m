@@ -4,7 +4,7 @@ function outData = getPreprocessData(animID,dbPath)
 
     % load animal database
     if ~exist('dbPath','var')
-        dbPath = '~/Projects/rn_Schizophrenia_Project/animal_metadata.mat';
+        dbPath = '~/Projects/rn_Schizophrenia_Project/metadata/animal_metadata.mat';
     end
     animDB = load(dbPath);
     animDB = animDB.animDB;

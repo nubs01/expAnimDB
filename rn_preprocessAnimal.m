@@ -16,7 +16,7 @@ function out = rn_preprocessAnimal(animID,varargin)
 
     out = [];
     projDir = '~/Projects/';
-    dbPath = [projDir 'rn_Schizophrenia_Project/animal_metadata.mat'];
+    dbPath = [projDir 'rn_Schizophrenia_Project/metadata/animal_metadata.mat'];
     doDIO = 0; % create DIO files
     doSpikes = 0; % create spikes files; leave as 0 if unclustered
 
@@ -35,6 +35,7 @@ function out = rn_preprocessAnimal(animID,varargin)
     animInfo = getPreprocessData(animID,dbPath);
     animDir = [projDir animInfo.animDir filesep];
     dataDir = [projDir animInfo.expDir filesep animID '_direct' filesep];
+    preproDir = [projDir animInfo.expDir filesep animID '_preprocess' filesep];
     currDir = pwd;
     logFile = [dataDir animID '_preprocess.log'];
     rawDirs = strcat(animDir,animInfo.rawDirs');
@@ -79,6 +80,15 @@ function out = rn_preprocessAnimal(animID,varargin)
     end
     fprintf('\n\n')
 
+    % Save animal metadata and preprocess data to animal preprocess folder
+    if ~exist(preproDir,'dir')
+        mkdir(preproDir)
+    end
+    metadata = getAnimMetadata(animID);
+    save([preproDir animID 'metadata.mat'],'metadata')
+    save([preproDir animID 'preprocessData.mat'],'animInfo')
+    clear metadata
+
     %% Process each day
     for sessionNum = daysToAnalyze
         fprintf('Processing day %02i....\n',sessionNum)
@@ -88,7 +98,7 @@ function out = rn_preprocessAnimal(animID,varargin)
 
 
         % Extract Binaries to matlab files
-        %rn_createNQPosFiles(dayDir,dataDir,animID,sessionNum,[],'diodenum',animInfo.diodenum{sessionNum})
+        rn_createNQPosFiles(dayDir,dataDir,animID,sessionNum,[],'diodenum',animInfo.diodenum{sessionNum})
         rn_createNQLFPFiles(dayDir,dataDir,animID,sessionNum)
         if doDIO
             mcz_createNQDIOFiles(dayDir,dataDir,animID,sessionNum)
@@ -107,7 +117,7 @@ function out = rn_preprocessAnimal(animID,varargin)
                 delFiles = dir(sprintf('%s%s*-*-%02i.mat',eegDir,animID,l));
                 delFiles = {delFiles.name};
                 delFiles = strcat(eegDir,delFiles);
-                fprintf('       deleting %s\n',delFiles)
+                cellfun(@(x) fprintf('       deleting %s\n',x),delFiles)
                 cellfun(@(x) delete(x),delFiles);
             end
         end
@@ -169,7 +179,7 @@ function out = rn_preprocessAnimal(animID,varargin)
 
         % Score behavioral states
         % TODO: Move before ripple extraction and use to help with ripple detection
-        % TODO: Create behavioral state algorithm. Use RW6.
+        % TODO: Create behavioral state algorithm. Use RW6 make figures of state classificiation with EMG/Pos vs EEG.
         if ~isempty(animInfo.emgList)
             fprintf('Scoring behavioral states using Position and EMG data...\n')
         else
@@ -198,3 +208,4 @@ function out = rn_preprocessAnimal(animID,varargin)
     disp(datestr(now,0))
     diary off
     out = 1;
+    cd(currDir)
