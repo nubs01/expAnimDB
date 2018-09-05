@@ -1,4 +1,5 @@
 function out = getAnimMetadata(animID,dbPath)
+    % out = getAnimMetadata(animID,dbPath)
     % returns the animal metadata entry from the database. Can provide location
     % for alternate database
 

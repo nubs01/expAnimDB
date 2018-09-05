@@ -697,7 +697,13 @@ function exportTask_menu_Callback(hObject, eventdata, handles)
 % --- Executes on button press in addAnim_push.
 function addAnim_push_Callback(hObject, eventdata, handles)
     animDB = getappdata(handles.figure1,'animDB');
-    animDat = createNewAnimalDataStruct();
+    anim = {animDB.animal};
+    pat = '(?<num>\d*$)';
+    A = regexp(anim,pat,'names');
+    B = cellfetch(A,'num');
+    C = str2double(B.values);
+    D = max(C);
+    animDat = createNewAnimalDataStruct('animal',['RW' num2str(D+1)]);
     animDB = [animDB animDat];
     if handles.saved
         set(handles.anim_list,'Value',numel(animDB))

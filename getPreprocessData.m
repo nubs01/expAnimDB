@@ -69,7 +69,6 @@ function outData = getPreprocessData(animID,dbPath)
     outData.emgList = emgList;
 
     % find refs and riptets
-    % TODO: Reformatting refList to be refList{day}(area) - need to rewrite preprocess appropriately
     refList = cell(1,days);
     riptetlist = cell(1,days);
     depths = zeros(size(tetDat,1),days);
@@ -81,9 +80,10 @@ function outData = getPreprocessData(animID,dbPath)
         riptetlist{l} = find([tetDat(:,l).riptet]);
         refList{l} = zeros(1,numel(areas));
         for k=1:numel(areas)
-            tmp = find([tetDat(strcmpi(tetAreas,areas{k}),l).ref]);
+            tetsInArea = find(strcmpi(tetAreas,areas{k}));
+            tmp = find([tetDat(tetsInArea,l).ref]);
             if ~isempty(tmp)
-                refList{l}(k) = tmp;
+                refList{l}(k) = tetsInArea(tmp);
             end
         end
         for k=1:numel(tetAreas)

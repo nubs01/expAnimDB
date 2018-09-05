@@ -138,7 +138,12 @@ function out = rn_preprocessAnimal(animID,varargin)
                 emgFiles = strrep(eegFiles,'eeg','emg');
                 eegFiles = strcat(eegDir,eegFiles);
                 emgFiles = strcat(emgDir,emgFiles);
-                cellfun(@(x,y) movefile(x,y),eegFiles,emgFiles);
+                for m=1:numel(emgFiles)
+                    eeg = load(eegFiles{m});
+                    emg = eeg.eeg;
+                    save(emgFiles{m},'emg')
+                    delete(eegFiles{m})
+                end
             end
         end
 
@@ -175,16 +180,25 @@ function out = rn_preprocessAnimal(animID,varargin)
         % Detect EEG artifacts using all avaible tetrodes
         % TODO: Move before ripple extraction and use to help with ripple detection
         fprintf('Detecting and Marking Artifacts...\n')
-        %rn_detectArtifacts(dataDIr, animID, sessionNum)
+        rn_createNQArtifactFiles(dataDIr, animID, sessionNum)
 
         % Score behavioral states
         % TODO: Move before ripple extraction and use to help with ripple detection
         % TODO: Create behavioral state algorithm. Use RW6 make figures of state classificiation with EMG/Pos vs EEG.
-        if ~isempty(animInfo.emgList)
-            fprintf('Scoring behavioral states using Position and EMG data...\n')
-        else
-            fprintf('EMG Not Available: Scoring behavioral states using only Position data...\n')
-        end
+        %if ~isempty(animInfo.emgList)
+        %    fprintf('Scoring behavioral states using Position and EMG data...\n')
+        %else
+        %    fprintf('EMG Not Available: Scoring behavioral states using only Position data...\n')
+        %end
+
+        fprintf('Creating CWT Spectrogram Files...\n')
+        createCWTFiles(dataDir,animID,sessionNum);
+        fprintf('Creating Chronux Spectra Files...\n')
+        createSpecFiles(dataDir,animID,sessionNum);
+        fprintf('Creating EMG from LFP...\n')
+        rn_EMGFromLFP(animID,dataDir,sessionNum);
+        fprintf('Scoring sleep states using Buzsaki Algorithm...\n')
+        scoreStates(animID,dataDir,sessionNum);
 
         fprintf('Day %02d complete!\n\n\n',sessionNum)
     end
