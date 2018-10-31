@@ -15,8 +15,8 @@ function out = rn_preprocessAnimal(animID,varargin)
     %   nTets   : maximum number of tetrodes on headstage (default=8)
 
     out = [];
-    projDir = '~/Projects/';
-    dbPath = [projDir 'rn_Schizophrenia_Project/metadata/animal_metadata.mat'];
+    projDir = get_data_path('project_directory');
+    dbPath = get_data_path('sz_metadata');
     doDIO = 0; % create DIO files
     doSpikes = 0; % create spikes files; leave as 0 if unclustered
 
@@ -180,7 +180,7 @@ function out = rn_preprocessAnimal(animID,varargin)
         % Detect EEG artifacts using all avaible tetrodes
         % TODO: Move before ripple extraction and use to help with ripple detection
         fprintf('Detecting and Marking Artifacts...\n')
-        rn_createNQArtifactFiles(dataDIr, animID, sessionNum)
+        rn_createNQArtifactFiles(dataDir, animID, sessionNum)
 
         % Score behavioral states
         % TODO: Move before ripple extraction and use to help with ripple detection
@@ -193,14 +193,15 @@ function out = rn_preprocessAnimal(animID,varargin)
 
         fprintf('Creating CWT Spectrogram Files...\n')
         createCWTFiles(dataDir,animID,sessionNum);
-        fprintf('Creating Chronux Spectra Files...\n')
-        createSpecFiles(dataDir,animID,sessionNum);
+        %fprintf('Creating Chronux Spectra Files...\n')
+        %createSpecFiles(dataDir,animID,sessionNum);
         fprintf('Creating EMG from LFP...\n')
         rn_EMGFromLFP(animID,dataDir,sessionNum);
         fprintf('Scoring sleep states using Buzsaki Algorithm...\n')
         scoreStates(animID,dataDir,sessionNum);
 
         fprintf('Day %02d complete!\n\n\n',sessionNum)
+        close all
     end
 
 

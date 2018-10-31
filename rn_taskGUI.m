@@ -56,7 +56,7 @@ function rn_taskGUI_OpeningFcn(hObject, eventdata, handles, varargin)
     handles.output = hObject;
 
     % Load DB or create new one
-    handles.DB_path = '/media/roshan/ExtraDrive1/Projects/rn_Schizophrenia_Project/metadata/animal_metadata.mat';
+    handles.DB_path = '/data/Projects/rn_Schizophrenia_Project/metadata/animal_metadata.mat';
     if exist(handles.DB_path,'file')
         animDB = load(handles.DB_path);
         dbName = animDB.dbName;
